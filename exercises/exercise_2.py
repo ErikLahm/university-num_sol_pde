@@ -2,8 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from nptyping import Float64, NDArray, Shape
 
-from advection_diffusion import Approximation, AvecDiff
-from verification import Verifier
+from pde_implementation.advection_diffusion import (  # pylint: disable=import-error
+    Approximation,
+    AvecDiff,
+)
+from pde_implementation.verification import Verifier  # pylint: disable=import-error
 
 BETA = 1
 MU = 0.1

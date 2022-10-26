@@ -1,8 +1,8 @@
 import numpy as np
 from nptyping import Float64, NDArray, Shape
 
-from dirichlet import Dirichlet
-from verification import Verifier
+from pde_implementation.dirichlet import Dirichlet  # pylint: disable=import-error
+from pde_implementation.verification import Verifier  # pylint: disable=import-error
 
 
 def funct_diri(x: float) -> float:
