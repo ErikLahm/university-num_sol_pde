@@ -60,7 +60,7 @@ class AvecDiff:
             a_matrix[i, i + 1] = -1
         return a_matrix
 
-    @property  # TODO: this is for the special cas that bc are equal 0 -> generalise first and last entry
+    @property  # TODO: this is for the special case that bc are equal 0 -> generalise first and last entry
     def b_vector(self) -> NDArray[Shape["N_m1, 1"], Float64]:
         b_vector = (
             self.distance**2

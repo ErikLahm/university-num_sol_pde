@@ -1,0 +1,67 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+from pde_implementation.fem_grid import Grid  # pylint: disable=import-error
+from pde_implementation.fme_poisson_dirichlet import PoissonDirichletAssamble
+from pde_implementation.poisson_dirichlet_examples import PoissonDirichletProblem
+
+grid = Grid(0, np.pi, 100, 0.5)
+grid2 = Grid(0, 1, 10, 0.5)
+grid3 = Grid(0, 1, 10, 1)
+
+fig, axs = plt.subplots(1, 3)  # type: ignore
+axs[0].scatter(grid.vertices, np.zeros((len(grid.vertices), 1)))  # type: ignore
+axs[0].plot(  # type: ignore
+    grid.vertices[:100],
+    grid.element_dims,
+    "-o",
+    color="r",
+    label="$h_i=h_{i+1}-h_{i}$",
+)
+axs[1].scatter(grid2.vertices, np.zeros((len(grid2.vertices), 1)))  # type: ignore
+axs[1].plot(  # type: ignore
+    grid2.vertices[:10],
+    grid2.element_dims,
+    "-o",
+    color="r",
+    label="$h_i=h_{i+1}-h_{i}$",
+)
+axs[2].scatter(grid3.vertices, np.zeros((len(grid3.vertices), 1)))  # type: ignore
+axs[2].plot(  # type: ignore
+    grid3.vertices[:10],
+    grid3.element_dims,
+    "-o",
+    color="r",
+    label="$h_i=h_{i+1}-h_{i}$",
+)
+for ax in axs:
+    ax.set_xlabel("vertices")  # type: ignore
+    ax.grid("true")  # type: ignore
+    ax.legend()  # type: ignore
+plt.show()  # type: ignore
+
+
+# _________________________________________________
+def func(x: float) -> float:
+    return -2 * np.cos(x) * np.exp(x)
+
+
+def solution(x: float) -> float:
+    return np.exp(x) * np.sin(x)
+
+
+problem = PoissonDirichletProblem(a=0, b=np.pi, func=func, exact_sol=solution)
+exact_solution_list = [
+    problem.exact_sol(x) for x in np.linspace(problem.a, problem.b, 100)
+]
+poss_diri = PoissonDirichletAssamble(grid, func)
+u = np.linalg.solve(poss_diri.coef_matrix, poss_diri.f_vector)
+u = np.append(u, [[0]])  # type: ignore
+u = np.insert(u, 0, 0)  # type: ignore
+fig, ax = plt.subplots()  # type: ignore
+ax.plot(np.linspace(problem.a, problem.b, 100), exact_solution_list)  # type: ignore
+ax.plot(grid.vertices, u)  # type: ignore
+plt.show()  # type: ignore
+
+print(poss_diri.coef_matrix)
+print(poss_diri.f_vector)
