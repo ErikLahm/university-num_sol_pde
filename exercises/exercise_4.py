@@ -28,12 +28,12 @@ def f_primitive(x: float) -> float:
 # ________________________________________________________________________________________
 # test Poisson assemble
 # ________________________________________________________________________________________
-number_of_elements = 10
+number_of_elements = 25
 poisson_example = GetPoissonDirichletProblem("problem 1")
 grid = Grid(
     a=poisson_example.a, b=poisson_example.b, num_el=number_of_elements, uniformity=0
 )
-fe = FiniteElement1D(degree=2)
+fe = FiniteElement1D(degree=1)
 # fe.plot_basis_pols()
 # fe.plot_basis_pols_der()
 ltg = LocalToGlobalMap(
@@ -54,9 +54,7 @@ num_sol = np.insert(num_sol, 0, 0)  # type: ignore
 # num_sol = num_sol * 0.35e-12  # why this factor degree 5????
 exact_sol = [
     poisson_example.exact_sol(x)[0]
-    for x in np.linspace(
-        poisson_example.a, poisson_example.b, poisson_assembling.global_dof + 2
-    )
+    for x in np.linspace(poisson_example.a, poisson_example.b, 100)
 ]
 # ________________________________________________________________________________________
 # plot solution:
@@ -70,9 +68,7 @@ ax.plot(  # type: ignore
     label="numerical solution",
 )
 ax.plot(  # type: ignore
-    np.linspace(
-        poisson_example.a, poisson_example.b, poisson_assembling.global_dof + 2
-    ),
+    np.linspace(poisson_example.a, poisson_example.b, 100),
     exact_sol,
     label="exact solution",
 )

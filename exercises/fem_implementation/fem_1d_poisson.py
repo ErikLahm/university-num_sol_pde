@@ -54,7 +54,7 @@ class FEMPoisson1D:
                         s
                         * w
                         * self.func(self.affine_map(s * x + a, l))  # type: ignore
-                        * np.polyval(s * x + a, self.fe.pol[d])  # type: ignore
+                        * np.polyval(p=self.fe.pol[d], x=(s * x + a))  # type: ignore
                         * self.grid.element_dims[l]  # type: ignore
                     )
                     b[b_row] += integral  # type: ignore
