@@ -1,11 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from fem_implementation.fem_grid import Grid  # pylint: disable=import-error
+from fem_implementation.fme_poisson_dirichlet import PoissonDirichletAssamble
+from fem_implementation.poisson_dirichlet_examples import GetPoissonDirichletProblem
 
-from pde_implementation.fem_grid import Grid  # pylint: disable=import-error
-from pde_implementation.fme_poisson_dirichlet import PoissonDirichletAssamble
-from pde_implementation.poisson_dirichlet_examples import PoissonDirichletProblem
-
-grid = Grid(0, np.pi, 100, 0.5)
+grid = Grid(0, 1, 100, 0.5)
 grid2 = Grid(0, 1, 10, 0.5)
 grid3 = Grid(0, 1, 10, 1)
 
@@ -38,10 +37,11 @@ for ax in axs:
     ax.set_xlabel("vertices")  # type: ignore
     ax.grid("true")  # type: ignore
     ax.legend()  # type: ignore
-plt.show()  # type: ignore
+# plt.show()  # type: ignore
 
 
 # _________________________________________________
+# task three and four
 def func(x: float) -> float:
     return -2 * np.cos(x) * np.exp(x)
 
@@ -50,18 +50,20 @@ def solution(x: float) -> float:
     return np.exp(x) * np.sin(x)
 
 
-problem = PoissonDirichletProblem(a=0, b=np.pi, func=func, exact_sol=solution)
+problem = GetPoissonDirichletProblem("problem 1")
+grid = Grid(problem.a, problem.b, 100, 0.5)
 exact_solution_list = [
-    problem.exact_sol(x) for x in np.linspace(problem.a, problem.b, 100)
+    problem.exact_sol(x)[0] for x in np.linspace(problem.a, problem.b, 100)
 ]
-poss_diri = PoissonDirichletAssamble(grid, func)
+poss_diri = PoissonDirichletAssamble(grid, problem.func)
 u = np.linalg.solve(poss_diri.coef_matrix, poss_diri.f_vector)
 u = np.append(u, [[0]])  # type: ignore
 u = np.insert(u, 0, 0)  # type: ignore
-fig, ax = plt.subplots()  # type: ignore
-ax.plot(np.linspace(problem.a, problem.b, 100), exact_solution_list)  # type: ignore
-ax.plot(grid.vertices, u)  # type: ignore
-plt.show()  # type: ignore
 
-print(poss_diri.coef_matrix)
-print(poss_diri.f_vector)
+
+fig, ax = plt.subplots()  # type: ignore
+ax.plot(np.linspace(problem.a, problem.b, 100), exact_solution_list, label="exact solution")  # type: ignore
+ax.plot(grid.vertices, u, "-o", label="fem solution")  # type: ignore
+ax.legend()  # type: ignore
+ax.grid("true")  # type: ignore
+plt.show()  # type: ignore

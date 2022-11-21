@@ -2,9 +2,8 @@ from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
+from fem_grid import Grid  # pylint: disable=import-error
 from nptyping import Float64, NDArray, Shape
-
-from pde_implementation.fem_grid import Grid  # pylint: disable=import-error
 
 # class Grid(Protocol):
 #     def vertices(self) -> NDArray[Shape["N_p1, 1"], Float64]:
@@ -17,7 +16,7 @@ from pde_implementation.fem_grid import Grid  # pylint: disable=import-error
 
 
 @dataclass
-class PoissonDirichletAssamble:
+class PoissonDirichletAssemble:
     grid: Grid
     func: Callable[[float], float]
 
